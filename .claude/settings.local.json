@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(unzip -p \"C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\mcp-sdk.skill\" \"mcp-sdk/SKILL.md\")",
+      "Bash(unzip -l \"C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\mcp-sdk.skill\")",
+      "Bash(dir \"specs\\\\2-chatkit-frontend-integration\")",
+      "Bash(xargs cat)",
+      "Bash(python test_auth.py)",
+      "Bash(cat frontend/.env*)",
+      "Bash(npm install better-sqlite3 --save --legacy-peer-deps)",
+      "Bash(cmd /c \"dir frontend\\\\app\\\\api\\\\auth\")",
+      "Bash(python main.py)",
+      "Bash(dir \"C:\\\\Users\\\\Hasnain\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Hasnain-Desktop-todo-agent-app\\\\tasks\"\")",
+      "Bash(python -c \"\nimport os\nfrom dotenv import load_dotenv\nload_dotenv\\(\\)  # Load main .env file\n\n# Now run the auth test\nexec\\(open\\(''test_auth.py''\\).read\\(\\)\\)\n\")",
+      "Bash(python verify_auth_config.py)",
+      "Bash(node verify-tables.js)",
+      "Bash(dir \"C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\specs\\\\001-agentic-chat-system\" /b)",
+      "Bash(dir frontend /B)",
+      "Bash(dir models /B)",
+      "Bash(dir /B)",
+      "Bash(dir)",
+      "Bash(powershell \"Copy-Item ''C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\backend\\\\src\\\\agents\\\\todo_agent.py'' ''C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\backend\\\\src\\\\agents\\\\agent.py''\")",
+      "Bash(dir C:UsersHasnainDesktoptodo agent appbackendsrcapi /s)",
+      "Bash(bash -c \"ls -la\")",
+      "Bash(cmd /c \"del C:\\\\Users\\\\Hasnain\\\\Desktop\\\\todo agent app\\\\frontend\\\\lib\\\\api.ts\")",
+      "Bash(dir \"frontend\\\\app\")",
+      "Bash(dir \"backend\\\\src\")",
+      "Bash(dir \"backend\\\\src\\\\api\")",
+      "Bash(dir \"frontend\\\\app\\\\api\")",
+      "Bash(dir \"frontend\\\\app\\\\api\\\\auth\")",
+      "Bash(dir backend*.env*)",
+      "Bash(dir frontend*.env*)",
+      "Bash(dir frontendapp /s)",
+      "Bash(findstr /S /I \"gemini_agent\" backendsrc*.py)"
+    ]
+  }
+}

@@ -1,0 +1,456 @@
+# Tasks: Better Auth for AI Todo Chatbot
+
+**Feature**: Better Auth for AI Todo Chatbot
+**Branch**: `001-better-auth`
+**Created**: 2025-12-28
+**Status**: Draft
+**Total Tasks**: 25
+**Priority**: P1 (Critical), P2 (High), P3 (Medium)
+
+## Authentication Infrastructure Setup
+
+### T001: Set up Better Auth provider configuration
+- **Priority**: P1
+- **Effort**: 2 days
+- **Dependencies**: None
+- **Description**: Configure Better Auth with email/password and Google OAuth providers
+- **Acceptance Criteria**:
+  - [ ] Better Auth provider initialized with email/password support
+  - [ ] Google OAuth configured with proper client ID and secret
+  - [ ] Environment variables set up for authentication configuration
+  - [ ] Authentication provider properly integrated with Next.js application
+- **Tests**:
+  - [ ] Unit test: Better Auth provider initialization
+  - [ ] Integration test: OAuth configuration verification
+- **Files**: `auth.config.ts`, `.env.local`
+
+### T002: Implement backend token verification middleware
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T001
+- **Description**: Create FastAPI middleware to verify JWT tokens and extract user_id
+- **Acceptance Criteria**:
+  - [ ] FastAPI middleware validates JWT tokens from Better Auth
+  - [ ] Middleware extracts user_id and adds to request context
+  - [ ] Invalid tokens return 401 Unauthorized
+  - [ ] Token expiration handled properly
+- **Tests**:
+  - [ ] Unit test: Valid token verification
+  - [ ] Unit test: Invalid token rejection
+  - [ ] Unit test: Expired token handling
+- **Files**: `middleware/auth.py`, `dependencies/auth.py`
+
+## Email/Password Authentication
+
+### T003: Implement email/password registration flow
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T001
+- **Description**: Create registration endpoint with validation and email verification
+- **Acceptance Criteria**:
+  - [ ] Registration endpoint accepts email and password
+  - [ ] Password validation (min 8 chars, complexity rules)
+  - [ ] Email verification email sent upon registration
+  - [ ] User account created in Better Auth
+- **Tests**:
+  - [ ] Unit test: Valid registration request
+  - [ ] Unit test: Invalid email format rejection
+  - [ ] Unit test: Weak password rejection
+  - [ ] Integration test: Full registration flow
+- **Files**: `api/auth/register.py`, `services/auth.py`
+
+### T004: Implement email/password login flow
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T001, T003
+- **Description**: Create login endpoint that authenticates users and returns tokens
+- **Acceptance Criteria**:
+  - [ ] Login endpoint accepts email and password
+  - [ ] Returns JWT access token and refresh token
+  - [ ] Returns user_id for MCP tool mapping
+  - [ ] Invalid credentials return appropriate error
+- **Tests**:
+  - [ ] Unit test: Valid login request
+  - [ ] Unit test: Invalid credentials rejection
+  - [ ] Integration test: Full login flow
+- **Files**: `api/auth/login.py`, `services/auth.py`
+
+### T005: Implement email verification functionality
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T003
+- **Description**: Handle email verification links and activate user accounts
+- **Acceptance Criteria**:
+  - [ ] Email verification endpoint processes verification tokens
+  - [ ] User accounts activated upon successful verification
+  - [ ] Verification links expire after specified time
+  - [ ] Proper error handling for invalid/expired tokens
+- **Tests**:
+  - [ ] Unit test: Valid verification token processing
+  - [ ] Unit test: Expired token handling
+  - [ ] Integration test: Email verification flow
+- **Files**: `api/auth/verify.py`, `services/auth.py`
+
+## Password Reset Functionality
+
+### T006: Implement password reset functionality
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T003, T004
+- **Description**: Create endpoints for password reset with email verification and secure token handling
+- **Acceptance Criteria**:
+  - [ ] Forgot password endpoint accepts email and sends reset token
+  - [ ] Reset password endpoint validates token and updates password
+  - [ ] Reset tokens expire after specified time (1 hour)
+  - [ ] Proper error handling for invalid/expired tokens
+- **Tests**:
+  - [ ] Unit test: Forgot password request processing
+  - [ ] Unit test: Password reset with valid token
+  - [ ] Unit test: Expired token handling
+  - [ ] Integration test: Full password reset flow
+- **Files**: `api/auth/forgot_password.py`, `api/auth/reset_password.py`, `services/auth.py`
+
+## Google OAuth Integration
+
+### T007: Implement Google OAuth login flow
+- **Priority**: P2
+- **Effort**: 2 days
+- **Dependencies**: T001
+- **Description**: Create Google OAuth integration with proper scopes and user mapping
+- **Acceptance Criteria**:
+  - [ ] OAuth initiation endpoint redirects to Google consent screen
+  - [ ] OAuth callback endpoint processes authorization code
+  - [ ] Google user profile data mapped to application user
+  - [ ] Returns JWT tokens upon successful OAuth completion
+- **Tests**:
+  - [ ] Unit test: OAuth initiation
+  - [ ] Unit test: OAuth callback processing
+  - [ ] Integration test: Full Google OAuth flow
+- **Files**: `api/auth/google.py`, `services/auth.py`
+
+### T008: Handle Google OAuth user profile data
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T007
+- **Description**: Process and store Google user profile data (email, name, avatar)
+- **Acceptance Criteria**:
+  - [ ] Google email, name, and profile picture stored/updated
+  - [ ] User accounts created/linked appropriately
+  - [ ] Profile data updated on subsequent logins
+  - [ ] Proper handling of missing profile data
+- **Tests**:
+  - [ ] Unit test: Profile data mapping
+  - [ ] Unit test: User account linking
+  - [ ] Integration test: Profile data handling
+- **Files**: `services/auth.py`, `models/user.py`
+
+## Token Management
+
+### T009: Implement token refresh functionality
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T001, T004
+- **Description**: Create endpoint to refresh access tokens using refresh tokens
+- **Acceptance Criteria**:
+  - [ ] Refresh endpoint accepts refresh token
+  - [ ] Returns new access token and refresh token
+  - [ ] Invalid refresh tokens return 401
+  - [ ] Refresh tokens have proper expiration and rotation
+- **Tests**:
+  - [ ] Unit test: Valid refresh token processing
+  - [ ] Unit test: Invalid refresh token rejection
+  - [ ] Integration test: Token refresh flow
+- **Files**: `api/auth/refresh.py`, `services/auth.py`
+
+### T010: Implement logout functionality
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T009
+- **Description**: Create logout endpoint that invalidates refresh tokens
+- **Acceptance Criteria**:
+  - [ ] Logout endpoint accepts refresh token
+  - [ ] Refresh token invalidated/revoked
+  - [ ] Session terminated on client and server
+  - [ ] Proper response for successful logout
+- **Tests**:
+  - [ ] Unit test: Successful logout
+  - [ ] Unit test: Invalid token logout handling
+  - [ ] Integration test: Complete logout flow
+- **Files**: `api/auth/logout.py`, `services/auth.py`
+
+## Protected API Implementation
+
+### T011: Apply authentication to chat API endpoint
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T002, T004
+- **Description**: Protect the chat API endpoint with authentication middleware
+- **Acceptance Criteria**:
+  - [ ] Chat endpoint requires valid authentication token
+  - [ ] User_id extracted from token and validated
+  - [ ] Access denied without valid token
+  - [ ] User can only access their own user_id endpoint
+- **Tests**:
+  - [ ] Unit test: Valid token access to chat endpoint
+  - [ ] Unit test: Invalid token rejection
+  - [ ] Unit test: Cross-user access prevention
+  - [ ] Integration test: Authenticated chat flow
+- **Files**: `api/chat.py`, `dependencies/auth.py`
+
+### T012: Implement user data isolation in MCP tools
+- **Priority**: P1
+- **Effort**: 2 days
+- **Dependencies**: T011
+- **Description**: Ensure MCP tools only operate on user's own data using authenticated user_id
+- **Acceptance Criteria**:
+  - [ ] All MCP tools validate user_id against authenticated user
+  - [ ] Data operations scoped to authenticated user
+  - [ ] Cross-user data access prevented
+  - [ ] Proper error handling for unauthorized access attempts
+- **Tests**:
+  - [ ] Unit test: User data isolation in add_task
+  - [ ] Unit test: User data isolation in list_tasks
+  - [ ] Unit test: Cross-user access prevention
+  - [ ] Integration test: MCP tool authentication
+- **Files**: `mcp/tools/*.py`, `services/tasks.py`
+
+## Frontend Authentication Components
+
+### T012: Create login UI component
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T001
+- **Description**: Implement login form with email/password and Google OAuth options
+- **Acceptance Criteria**:
+  - [ ] Email/password login form with validation
+  - [ ] Google OAuth login button
+  - [ ] Error handling and user feedback
+  - [ ] Responsive design for different screen sizes
+- **Tests**:
+  - [ ] Component test: Form validation
+  - [ ] Component test: OAuth button functionality
+  - [ ] Integration test: Login flow
+- **Files**: `components/auth/LoginForm.tsx`, `pages/login.tsx`
+
+### T013: Create registration UI component
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T003
+- **Description**: Implement registration form with email/password and validation
+- **Acceptance Criteria**:
+  - [ ] Registration form with email and password fields
+  - [ ] Password strength validation
+  - [ ] Form validation and error handling
+  - [ ] Success feedback after registration
+- **Tests**:
+  - [ ] Component test: Form validation
+  - [ ] Component test: Password strength validation
+  - [ ] Integration test: Registration flow
+- **Files**: `components/auth/RegisterForm.tsx`, `pages/register.tsx`
+
+### T014: Create protected route wrapper
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T002
+- **Description**: Implement higher-order component for protecting application routes
+- **Acceptance Criteria**:
+  - [ ] Component checks for valid authentication
+  - [ ] Redirects to login if not authenticated
+  - [ ] Passes user context to wrapped component
+  - [ ] Handles token refresh automatically
+- **Tests**:
+  - [ ] Component test: Authentication check
+  - [ ] Component test: Redirect behavior
+  - [ ] Integration test: Protected route access
+- **Files**: `components/auth/ProtectedRoute.tsx`, `hoc/withAuth.tsx`
+
+## Security and Rate Limiting
+
+### T015: Implement rate limiting for authentication endpoints
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T003, T004
+- **Description**: Add rate limiting to prevent brute force attacks on auth endpoints
+- **Acceptance Criteria**:
+  - [ ] Rate limiting applied to login endpoint (5 attempts/15 mins)
+  - [ ] Rate limiting applied to registration endpoint
+  - [ ] Proper 429 response for rate limit exceeded
+  - [ ] Rate limiting by IP and user account
+- **Tests**:
+  - [ ] Unit test: Rate limit enforcement
+  - [ ] Unit test: Rate limit reset
+  - [ ] Integration test: Rate limiting behavior
+- **Files**: `middleware/rate_limit.py`, `api/auth/*.py`
+
+### T016: Implement secure token storage
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T004, T008
+- **Description**: Implement secure storage and handling of authentication tokens
+- **Acceptance Criteria**:
+  - [ ] Access tokens stored securely (HTTP-only cookies or secure localStorage)
+  - [ ] Refresh tokens stored securely with proper security measures
+  - [ ] Tokens automatically refreshed when expired
+  - [ ] Tokens cleared on logout
+- **Tests**:
+  - [ ] Unit test: Token storage security
+  - [ ] Unit test: Token refresh automation
+  - [ ] Integration test: Secure token handling
+- **Files**: `utils/auth.ts`, `services/auth.ts`
+
+## Error Handling and Edge Cases
+
+### T017: Implement comprehensive authentication error handling
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T003, T004, T006
+- **Description**: Create proper error responses and user feedback for auth failures
+- **Acceptance Criteria**:
+  - [ ] Specific error messages for different failure types
+  - [ ] User-friendly error messages in UI
+  - [ ] Proper HTTP status codes for all error scenarios
+  - [ ] Structured logging for authentication errors
+- **Tests**:
+  - [ ] Unit test: Error response formatting
+  - [ ] Unit test: Status code assignment
+  - [ ] Integration test: Error handling flow
+- **Files**: `errors/auth.py`, `api/auth/*.py`
+
+### T018: Handle token expiration and refresh scenarios
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T008, T016
+- **Description**: Implement automatic token refresh and expiration handling
+- **Acceptance Criteria**:
+  - [ ] Access tokens automatically refreshed before expiration
+  - [ ] User session maintained during refresh
+  - [ ] Proper handling of refresh token expiration
+  - [ ] Graceful degradation when refresh fails
+- **Tests**:
+  - [ ] Unit test: Automatic token refresh
+  - [ ] Unit test: Refresh token expiration handling
+  - [ ] Integration test: Token expiration flow
+- **Files**: `services/auth.ts`, `hooks/useAuth.ts`
+
+## User Profile and Session Management
+
+### T019: Implement user profile management
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T007
+- **Description**: Create endpoints for retrieving and updating user profile information
+- **Acceptance Criteria**:
+  - [ ] Get user profile endpoint with authentication
+  - [ ] Update profile information (name, avatar, etc.)
+  - [ ] Profile data validation and sanitization
+  - [ ] Proper error handling for profile operations
+- **Tests**:
+  - [ ] Unit test: Profile retrieval
+  - [ ] Unit test: Profile update validation
+  - [ ] Integration test: Profile management flow
+- **Files**: `api/user/profile.py`, `services/user.py`
+
+### T020: Implement session management UI
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T019
+- **Description**: Create UI components for user session management
+- **Acceptance Criteria**:
+  - [ ] User profile display component
+  - [ ] Logout button with confirmation
+  - [ ] Session status indicator
+  - [ ] Responsive design implementation
+- **Tests**:
+  - [ ] Component test: Profile display
+  - [ ] Component test: Logout functionality
+  - [ ] Integration test: Session management flow
+- **Files**: `components/user/ProfileMenu.tsx`, `components/user/UserInfo.tsx`
+
+## Testing and Validation
+
+### T021: Create comprehensive authentication test suite
+- **Priority**: P1
+- **Effort**: 2 days
+- **Dependencies**: All previous tasks
+- **Description**: Implement end-to-end tests for all authentication flows
+- **Acceptance Criteria**:
+  - [ ] End-to-end tests for email/password registration
+  - [ ] End-to-end tests for email/password login
+  - [ ] End-to-end tests for Google OAuth login
+  - [ ] End-to-end tests for protected API access
+  - [ ] End-to-end tests for token refresh and logout
+- **Tests**:
+  - [ ] E2E test: Registration flow
+  - [ ] E2E test: Login flow
+  - [ ] E2E test: OAuth flow
+  - [ ] E2E test: API protection
+- **Files**: `tests/e2e/auth.e2e.ts`, `tests/e2e/api_auth.e2e.ts`
+
+### T022: Implement security testing for authentication
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T021
+- **Description**: Test authentication security including data isolation and token validation
+- **Acceptance Criteria**:
+  - [ ] Test cross-user data access prevention
+  - [ ] Test token manipulation attempts
+  - [ ] Test brute force attack prevention
+  - [ ] Test session hijacking prevention
+- **Tests**:
+  - [ ] Security test: Data isolation validation
+  - [ ] Security test: Token validation bypass attempts
+  - [ ] Security test: Rate limiting effectiveness
+- **Files**: `tests/security/auth_security.py`, `tests/security/api_security.py`
+
+## Documentation and Integration
+
+### T023: Document authentication API contracts
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: All API implementation tasks
+- **Description**: Create comprehensive API documentation for authentication endpoints
+- **Acceptance Criteria**:
+  - [ ] API documentation for all auth endpoints
+  - [ ] Authentication flow diagrams
+  - [ ] Error response documentation
+  - [ ] Integration guide for frontend/backend
+- **Tests**:
+  - [ ] Documentation accuracy verification
+  - [ ] API contract validation
+- **Files**: `docs/api/auth.md`, `docs/auth/flows.md`
+
+### T024: Integrate authentication with existing MCP tools
+- **Priority**: P1
+- **Effort**: 1 day
+- **Dependencies**: T011
+- **Description**: Ensure all existing MCP tools work with authenticated user context
+- **Acceptance Criteria**:
+  - [ ] All 5 required MCP tools (add_task, list_tasks, etc.) work with user context
+  - [ ] MCP tools properly validate user permissions
+  - [ ] User_id properly passed from frontend to MCP tools
+  - [ ] Error handling for unauthenticated MCP tool access
+- **Tests**:
+  - [ ] Integration test: MCP tools with authentication
+  - [ ] Integration test: User context passing
+- **Files**: `mcp/tools/*.py`, `services/tasks.py`
+
+### T025: Performance testing for authentication system
+- **Priority**: P2
+- **Effort**: 1 day
+- **Dependencies**: T021
+- **Description**: Test authentication system performance under load
+- **Acceptance Criteria**:
+  - [ ] Token verification latency < 500ms (p95)
+  - [ ] Support for 1000+ concurrent users
+  - [ ] Rate limiting effectiveness under load
+  - [ ] Performance metrics documented
+- **Tests**:
+  - [ ] Load test: Token verification performance
+  - [ ] Load test: Concurrent user authentication
+  - [ ] Stress test: Rate limiting under load
+- **Files**: `tests/performance/auth_perf.py`, `tests/performance/results.md`
+
+## Task Dependencies Summary
+- **Critical Path**: T001 → T002 → T004 → T010 → T011 → T021
+- **Parallelizable**: T003/T006 can run in parallel after T001
+- **Integration Point**: T024 requires all authentication flows to be complete

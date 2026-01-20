@@ -1,0 +1,154 @@
+{
+  "id": "a1d51732-e695-4a40-badd-d9b8b458065f",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "8",
+  "dialect": "postgresql",
+  "tables": {
+    "public.account": {
+      "name": "account",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "provider_id": { "type": "text", "notNull": true },
+        "provider_account_id": { "type": "text", "notNull": true },
+        "type": { "type": "text", "notNull": false },
+        "scope": { "type": "text", "notNull": false },
+        "access_token": { "type": "text", "notNull": false },
+        "refresh_token": { "type": "text", "notNull": false },
+        "id_token": { "type": "text", "notNull": false },
+        "session_state": { "type": "text", "notNull": false },
+        "expires_at": { "type": "timestamp with time zone", "notNull": false },
+        "password": { "type": "text", "notNull": false },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" },
+        "updated_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "account_user_id_idx": { "columns": ["user_id"] },
+        "account_provider_id_idx": { "columns": ["provider_id"] },
+        "account_provider_account_id_idx": { "columns": ["provider_account_id"] }
+      }
+    },
+    "public.session": {
+      "name": "session",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "expires_at": { "type": "timestamp with time zone", "notNull": true },
+        "ip_address": { "type": "text", "notNull": false },
+        "user_agent": { "type": "text", "notNull": false },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" },
+        "updated_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "session_user_id_idx": { "columns": ["user_id"] }
+      }
+    },
+    "public.user": {
+      "name": "user",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "email": { "type": "text", "notNull": true },
+        "email_verified": { "type": "boolean", "default": false },
+        "name": { "type": "text", "default": "" },
+        "avatar": { "type": "text", "notNull": false },
+        "disabled": { "type": "boolean", "default": false },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" },
+        "updated_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "user_email_idx": { "columns": ["email"] }
+      },
+      "uniqueConstraints": {
+        "user_email_unique": { "columns": ["email"] }
+      }
+    },
+    "public.verification": {
+      "name": "verification",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "identifier": { "type": "text", "notNull": true },
+        "value": { "type": "text", "notNull": true },
+        "expires_at": { "type": "timestamp with time zone", "notNull": true },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" },
+        "updated_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "verification_identifier_value_idx": { "columns": ["identifier", "value"] }
+      }
+    },
+    "public.reset_password": {
+      "name": "reset_password",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "expires_at": { "type": "timestamp with time zone", "notNull": true }
+      },
+      "indexes": {
+        "reset_password_user_id_idx": { "columns": ["user_id"] }
+      }
+    },
+    "public.two_factor": {
+      "name": "two_factor",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "secret": { "type": "text", "notNull": true },
+        "backup_codes": { "type": "text[]", "notNull": false },
+        "period": { "type": "serial", "notNull": true, "default": 30 },
+        "digits": { "type": "serial", "notNull": true, "default": 6 },
+        "algorithm": { "type": "text", "default": "sha1" },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "two_factor_user_id_idx": { "columns": ["user_id"] }
+      },
+      "uniqueConstraints": {
+        "two_factor_user_id_unique": { "columns": ["user_id"] }
+      }
+    },
+    "public.two_factor_verification": {
+      "name": "two_factor_verification",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "type": { "type": "text", "notNull": true },
+        "expires_at": { "type": "timestamp with time zone", "notNull": true }
+      },
+      "indexes": {
+        "two_factor_verification_user_id_idx": { "columns": ["user_id"] }
+      }
+    },
+    "public.passkey": {
+      "name": "passkey",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "public_key": { "type": "text", "notNull": true },
+        "counter": { "type": "serial", "notNull": true },
+        "name": { "type": "text", "notNull": true },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" }
+      },
+      "indexes": {
+        "passkey_user_id_idx": { "columns": ["user_id"] }
+      }
+    },
+    "public.api_key": {
+      "name": "api_key",
+      "columns": {
+        "id": { "type": "text", "primaryKey": true, "notNull": true },
+        "user_id": { "type": "text", "notNull": true },
+        "name": { "type": "text", "notNull": true },
+        "key": { "type": "text", "notNull": true },
+        "created_at": { "type": "timestamp with time zone", "notNull": true, "default": "now()" },
+        "expires_at": { "type": "timestamp with time zone", "notNull": false }
+      },
+      "indexes": {
+        "api_key_user_id_idx": { "columns": ["user_id"] },
+        "api_key_key_idx": { "columns": ["key"] }
+      },
+      "uniqueConstraints": {
+        "api_key_key_unique": { "columns": ["key"] }
+      }
+    }
+  }
+}

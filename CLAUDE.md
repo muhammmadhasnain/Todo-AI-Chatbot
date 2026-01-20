@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Python 3.11, Next.js 16, JavaScript/TypeScript + Better Auth, FastAPI, SQLModel, Neon Serverless PostgreSQL, OpenAI SDK, MCP SDK (001-better-auth)
+- Neon Serverless PostgreSQL database with SQLModel ORM (001-better-auth)
+
+## Recent Changes
+- 001-better-auth: Added Python 3.11, Next.js 16, JavaScript/TypeScript + Better Auth, FastAPI, SQLModel, Neon Serverless PostgreSQL, OpenAI SDK, MCP SDK

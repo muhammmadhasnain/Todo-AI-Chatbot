@@ -1,0 +1,17 @@
+{
+  "name": "better-auth-skill",
+  "version": "1.0.0",
+  "description": "Better Auth skill for Claude Code",
+  "main": "index.js",
+  "scripts": {
+    "init": "node scripts/init-better-auth.js"
+  },
+  "keywords": ["authentication", "oauth", "google", "email-password", "better-auth"],
+  "author": "Claude Code",
+  "license": "MIT",
+  "dependencies": {
+    "better-auth": "^1.3.10",
+    "@better-auth/oauth-providers": "^1.3.10",
+    "@better-auth/client": "^1.3.10"
+  }
+}
